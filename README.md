@@ -1,150 +1,148 @@
-# unicc
-
-
-
-
-
-# Toxic Language Detection API
-
-## Overview
-This project is a deep learning-based multi-label classification system for detecting toxic language in text. The model accepts textual input and outputs predictions for the following toxicity labels:
-- **Toxic**
-- **Severe Toxic**
-- **Obscene**
-- **Threat**
-- **Insult**
-- **Identity Hate**
 
 ---
 
-## API Endpoint
+# **Toxic Language and Misinformation Detection API**
+
+## **Overview**
+This project provides an advanced API for detecting toxic language, analyzing sentiment, and categorizing misinformation or hate speech. The system accepts textual input and returns predictions across multiple toxicity categories, along with sentiment analysis and topic modeling.
+
+---
+
+## **API Endpoint**
 The API is hosted at:
-**[https://fastapi-app-280288253402.us-central1.run.app/preidct](https://fastapi-app-280288253402.us-central1.run.app/preidct)**
+**[https://fastapi-app-280288253402.us-central1.run.app/predict](https://fastapi-app-280288253402.us-central1.run.app/predict)**
 
 ---
 
-## Input Format
+## **Input Format**
 - **Type**: JSON
 - **Field**:
-  - `text`: The input text to classify.
+  - `text`: The input text to analyze.
 
-### Example Input
+### **Example Input**
 ```json
 {
-    "text": "You are absolutely the worst kind of human being. Nobody wants to listen to your idiotic opinions."
+    "text": "in certain cities, the influx of immigrants has coincided with increased competition for jobs, which leads some local residents to feel displaced or overlooked"
 }
 ```
 
+---
 
-## Output Format
+## **Output Format**
 - **Type**: JSON
 - **Fields**:
-  - `predictions`: A dictionary of probabilities for each toxicity label.
-  - `labels`: A dictionary of binary predictions for each label (0 = non-toxic, 1 = toxic).
+  - **`toxicity_score`**:
+    - A single value measuring the overall toxicity level in the text.
+    - Higher scores indicate higher toxicity and may signal extreme hate speech.
+  - **`predictions`**:
+    - An array of six probabilities corresponding to predictions for the following labels:
+      1. Toxic
+      2. Severe Toxic
+      3. Obscene
+      4. Threat
+      5. Insult
+      6. Identity Hate
+  - **`topic`**:
+    - The categorized subject of the text based on the following topics:
+      - `crime`
+      - `employment`
+      - `social benefits`
+      - `immigration policies`
+      - `violence`
+      - `other`
+  - **`sentiment`**:
+    - The sentiment of the text, categorized as:
+      - `NEGATIVE`
+      - `NEUTRAL`
+      - `POSITIVE`
 
-### Example Output
+---
+
+### **Example Output**
+For the given input:
 ```json
 {
-    "predictions": {
-        "toxic": 0.95,
-        "severe_toxic": 0.40,
-        "obscene": 0.88,
-        "threat": 0.12,
-        "insult": 0.90,
-        "identity_hate": 0.15
-    },
-    "labels": {
-        "toxic": 1,
-        "severe_toxic": 0,
-        "obscene": 1,
-        "threat": 0,
-        "insult": 1,
-        "identity_hate": 0
-    }
+    "text": "in certain cities, the influx of immigrants has coincided with increased competition for jobs, which leads some local residents to feel displaced or overlooked"
+}
+```
+
+The API would return:
+```json
+{
+    "toxicity_score": 3.33573908856503e-05,
+    "predictions": [
+        0.00011814564641099423,
+        4.6940104425630125e-07,
+        3.177278267685324e-05,
+        1.2817497008654755e-05,
+        2.3205793695524335e-05,
+        1.3733224477618933e-05
+    ],
+    "topic": "employment",
+    "sentiment": "NEGATIVE"
 }
 ```
 
 ---
 
-## Input and Output Details
+## **Input and Output Details**
 
-### Input Parameters
+### **Input Parameters**
 | Field   | Type   | Description                                                                 | Required |
 |---------|--------|-----------------------------------------------------------------------------|----------|
-| `text`  | string | Text to classify. Maximum length is 512 characters (truncated if exceeded).| Yes      |
+| `text`  | string | The input text to analyze. Maximum length is 512 characters (truncated if exceeded). | Yes      |
 
-### Output Fields
-| Field         | Type     | Description                                                    |
-|---------------|----------|----------------------------------------------------------------|
-| `predictions` | dict     | Probabilities for each toxicity label. Values range from 0 to 1.|
-| `labels`      | dict     | Binary predictions for each label (0 = non-toxic, 1 = toxic).  |
+### **Output Fields**
+| Field           | Type     | Description                                                                 |
+|------------------|----------|-----------------------------------------------------------------------------|
+| `toxicity_score`| float    | Measures the overall toxicity level in the text.                            |
+| `predictions`   | array    | An array of six probabilities corresponding to toxicity labels.             |
+| `topic`         | string   | The categorized subject of the text (e.g., `crime`, `employment`).          |
+| `sentiment`     | string   | The sentiment of the text (`NEGATIVE`, `NEUTRAL`, or `POSITIVE`).            |
 
-#### Toxicity Labels
-| Label             | Description                                    |
-|-------------------|------------------------------------------------|
-| `toxic`           | Contains general toxic language.               |
-| `severe_toxic`    | Contains severe toxic language.                |
-| `obscene`         | Contains obscene or vulgar language.           |
-| `threat`          | Contains threatening language.                 |
-| `insult`          | Contains insulting language.                   |
-| `identity_hate`   | Contains hate speech targeting identity groups.|
+#### **Toxicity Labels**
+The `predictions` array corresponds to the following labels in order:
+1. **Toxic**: General toxic language.
+2. **Severe Toxic**: Aggressive toxic language.
+3. **Obscene**: Vulgar or obscene language.
+4. **Threat**: Direct or indirect threatening language.
+5. **Insult**: Language meant to insult or demean.
+6. **Identity Hate**: Hate speech targeting identity groups.
 
----
+#### **Topics**
+The `topic` field classifies the text into one of the following categories:
+- `crime`
+- `employment`
+- `social benefits`
+- `immigration policies`
+- `violence`
+- `other`
 
-## How to Use
-### Running the API
-The API is hosted at the given endpoint. To test the API:
-1. Use a tool like Postman or `curl`.
-2. Send a POST request with a JSON body containing the `text` field.
-
-### Example Request
-POST request to `https://fastapi-app-280288253402.us-central1.run.app/preidct`:
-- **Input**:
-```json
-{
-    "text": "Your example toxic text here."
-}
-```
-
-- **Output**:
-```json
-{
-    "predictions": {
-        "toxic": 0.87,
-        "severe_toxic": 0.34,
-        "obscene": 0.76,
-        "threat": 0.12,
-        "insult": 0.80,
-        "identity_hate": 0.22
-    },
-    "labels": {
-        "toxic": 1,
-        "severe_toxic": 0,
-        "obscene": 1,
-        "threat": 0,
-        "insult": 1,
-        "identity_hate": 0
-    }
-}
-```
+#### **Sentiments**
+The `sentiment` field identifies the sentiment of the text:
+- `NEGATIVE`: Indicates hostile or negative sentiment.
+- `NEUTRAL`: Indicates neither positive nor negative sentiment.
+- `POSITIVE`: Indicates supportive or positive sentiment.
 
 ---
 
-## Dependencies
+## **Dependencies**
 - Python >= 3.7
 - FastAPI
 - Uvicorn
 - Transformers
-- Torch
+- PyTorch
 
-### Install Dependencies
+### **Install Dependencies**
 ```bash
 pip install fastapi uvicorn transformers torch
 ```
 
 ---
 
-## License
+## **License**
 This project is licensed under the MIT License and is for research purposes only. Avoid using the model in inappropriate scenarios.
-```
+
+---
+
 
