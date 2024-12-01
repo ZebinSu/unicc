@@ -4,7 +4,6 @@
 
 
 
-```markdown
 # Toxic Language Detection API
 
 ## Overview
@@ -36,7 +35,6 @@ The API is hosted at:
 }
 ```
 
----
 
 ## Output Format
 - **Type**: JSON
@@ -150,4 +148,3 @@ pip install fastapi uvicorn transformers torch
 This project is licensed under the MIT License and is for research purposes only. Avoid using the model in inappropriate scenarios.
 ```
 
-将上述内容保存为 `README.md` 文件即可！如果需要进一步修改或补充，请告诉我。
